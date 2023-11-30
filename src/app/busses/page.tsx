@@ -1,18 +1,21 @@
-import Link from 'next/link';
 import { getBusses } from '@/lib/fetch';
+import { BusItem } from './components/busItem';
 
 export default async function BussesPage() {
-  const busses = await getBusses();
+  const busses = getBusses();
   return (
-    <div>
-      {busses.map((bus) => (
-        <>
-        <div key={bus.id}>{bus.name}</div>
-        <Link href={`busses/${bus.id}`}>
-          Ver detalles 
-        </Link>
-        </>
-      ))}
-    </div>
+    <main className="grid grid-cols-2 gap-4 p-4">
+      <section>
+        <div className="border ">
+          <h1 className="text-xl font-bold my-4 pl-2">Autobuses disponibles</h1>
+          <div className="grid grid-cols-2 gap-2 p-2">
+            {busses.map((bus) => (
+             <BusItem key={bus.id} bus={bus} />
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="border"></section>
+    </main>
   );
 }
