@@ -1,0 +1,52 @@
+[
+  {
+    "id": "3c00a044-5d55-40ef-9055-79c9bcbbe48d",
+    "name": "Bus 1",
+    "color": "rojo"
+  },
+  {
+    "id": "cb018c78-7923-4aa6-b323-fd7d2f8b6e53",
+    "name": "Bus 2",
+    "color": "azul"
+  },
+  {
+    "id": "117c0f34-9f7e-444b-956b-cb131701c002",
+    "name": "Bus 3",
+    "color": "rojo"
+  },
+  {
+    "id": "5bc66282-e5a1-463c-bbbc-51162be41c1d",
+    "name": "Bus 4",
+    "color": "verde"
+  },
+  {
+    "id": "0dd25796-e805-446d-9493-fa1b239cfad9",
+    "name": "Bus 5",
+    "color": "rojo"
+  },
+  {
+    "id": "d1721a1e-4933-4322-976d-02faa28da9e3",
+    "name": "Bus 6",
+    "color": "azul"
+  },
+  {
+    "id": "a7298ce3-1180-414c-a361-5083476faa74",
+    "name": "Bus 7",
+    "color": "rojo"
+  },
+  {
+    "id": "7f95c425-67a8-424b-9808-778192abd918",
+    "name": "Bus 8",
+    "color": "verde"
+  },
+  {
+    "id": "eeb72709-e56c-4b47-aeb5-343a283d681e",
+    "name": "Bus 9",
+    "color": "rojo"
+  },
+  {
+    "id": "b0504681-1449-4c28-8854-1491c882aa8f",
+    "name": "Bus 10",
+    "color": "azul"
+  }
+]
