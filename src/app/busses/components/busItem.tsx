@@ -5,7 +5,7 @@ import Link from 'next/link';
 interface BusItemProps {
   bus: Busses;
 }
-export function BusItem({ bus }: BusItemProps) {
+export default function BusItem({ bus }: BusItemProps) {
   const { id, name, image } = bus;
 
   return (
