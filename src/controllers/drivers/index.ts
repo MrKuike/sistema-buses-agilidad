@@ -4,13 +4,13 @@ import { Drivers as DriversType } from "@prisma/client";
 export default class Drivers {
   static async getDriver({ id }: { id: number }) {
     try {
-      const result = await prisma.drivers.findUnique({
+      const data = await prisma.drivers.findUnique({
         where: {
           id,
         },
       });
-      if (result) {
-        return { status: 200, result };
+      if (data) {
+        return { status: 200, data };
       }
       return { status: 404, message: 'Driver not found' };
     } catch (error: any) {
@@ -20,10 +20,11 @@ export default class Drivers {
 
   static async getAllDrivers() {
     try {
-      const result = await prisma.drivers.findMany();
-      if (result) {
-        return { status: 200, result };
+      const data = await prisma.drivers.findMany();      
+      if (data) {
+        return { status: 200, data };
       }
+      
       return { status: 404, message: 'Drivers not found' };
     } catch (error: any) {
       return { status: 500, message: error };

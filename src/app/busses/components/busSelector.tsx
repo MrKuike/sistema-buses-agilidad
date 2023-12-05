@@ -6,7 +6,13 @@ import { Busses } from '@/types';
 import { useEffect, useState } from 'react';
 import { TailSpin } from 'react-loading-icons';
 
-function BuildTable({ data }: { data: Busses[] | null }) {
+interface BuildTableProps {
+	data: Busses[] | null;
+	handleSelect: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+	selectedPlate: string;
+}
+
+function BuildTable({ data, handleSelect, selectedPlate }: BuildTableProps) {
 	if (!data) {
 		return (
 			<div className='h-full grid place-content-center'>
@@ -19,6 +25,8 @@ function BuildTable({ data }: { data: Busses[] | null }) {
 		<div className='grid auto-rows-max grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-2 p-2 h-full overflow-y-auto'>
 			{data.map(bus => (
 				<BusItem
+				select={handleSelect}
+					selected={selectedPlate === bus.plate}
 					key={bus.plate}
 					bus={bus}
 				/>
@@ -27,7 +35,20 @@ function BuildTable({ data }: { data: Busses[] | null }) {
 	);
 }
 
-export default function BusSelector() {
+interface BusSelectorProps {
+	setSelection: React.Dispatch<
+		React.SetStateAction<{
+			busPlate?: string | undefined;
+			routeId?: string | undefined;
+		}>
+	>;
+	selected: {
+		busPlate?: string | undefined;
+		routeId?: string | undefined;
+	};
+}
+
+export default function BusSelector({setSelection, selected}: BusSelectorProps) {
 	const router = useRouter();
 	const [data, setData] = useState<Busses[] | null>(null);
 
@@ -51,6 +72,10 @@ export default function BusSelector() {
 		return data;
 	};
 
+	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		setSelection((prev) => ({ ...prev, busPlate: event.target.value }));
+	}
+
 	return (
 		<div className='h-full'>
 			<div className='flex justify-between px-2'>
@@ -62,7 +87,7 @@ export default function BusSelector() {
 					Agregar
 				</button>
 			</div>
-			<BuildTable data={data} />
+			<BuildTable selectedPlate={selected.busPlate ?? ''} handleSelect={handleSelect} data={data} />
 		</div>
 	);
 }

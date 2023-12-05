@@ -18,9 +18,10 @@ export interface Driver {
 export interface Road {
   id: UUID;
   name: string;
+  mapUrl: string;
   time: string;
   interestPoints: {
-    name: string;
+    id: string;
     street: string;
     order: number;
   }[];

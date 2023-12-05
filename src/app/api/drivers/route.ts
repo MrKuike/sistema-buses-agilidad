@@ -19,12 +19,16 @@ type ResGET = {
 export async function GET() {
 	const { status, message, data }: ResGET = await Drivers.getAllDrivers();
 	if (status === 500)
-		return new Response(JSON.stringify({ message }), { status });
+		return new Response(JSON.stringify({ message }), { status });	
+	console.log(data);
+	
 	return new Response(JSON.stringify(data), { status });
 }
 
 export async function POST(req: Request) {
 	const { data }: Req = await req.json();
+	console.log(data);
+	
 
 	if (!data) return new Response('Missing information', { status: 400 });
 

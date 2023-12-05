@@ -10,11 +10,11 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
 	title: 'Sistema de buses',
+	icons: {icon: 'favicons/favicon.ico'},
 };
 
 export default function RootLayout(props: {
 	children: React.ReactNode;
-	header: React.ReactNode;
 }) {
 	return (
 		<html lang='es'>

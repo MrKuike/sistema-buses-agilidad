@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FaRoute } from "react-icons/fa";
-import { getRoads } from "../../lib/fetch";
+import { getRoads } from "@/lib/fetch";
 
 export default function Page() {
   const router = useRouter();
