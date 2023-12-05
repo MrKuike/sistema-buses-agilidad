@@ -8,6 +8,9 @@ dependencies:
   next:
     specifier: 14.0.3
     version: 14.0.3(react-dom@18.2.0)(react@18.2.0)
+  openrouteservice:
+    specifier: ^0.1.2
+    version: 0.1.2
   react:
     specifier: ^18
     version: 18.2.0
@@ -1214,6 +1217,11 @@ packages:
       rimraf: 3.0.2
     dev: true
 
+  /flat@5.0.2:
+    resolution: {integrity: sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==}
+    hasBin: true
+    dev: false
+
   /flatted@3.2.9:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
     dev: true
@@ -1912,6 +1920,13 @@ packages:
     dependencies:
       wrappy: 1.0.2
     dev: true
+
+  /openrouteservice@0.1.2:
+    resolution: {integrity: sha512-9X09HITxuorJ8orhi9ht66bNacH11qxfd4HyBavjkGEHkrE3rYK26S5GUEoS1lZMWESyn4c5EFRAKaAXLXH1sg==}
+    engines: {node: '>=18'}
+    dependencies:
+      flat: 5.0.2
+    dev: false
 
   /optionator@0.9.3:
     resolution: {integrity: sha512-JjCoypp+jKn1ttEFExxhetCKeJt9zhAgAve5FXHixTvFDW/5aEktX9bufBKLRRMdU7bNtpLfcGu94B3cdEJgjg==}
