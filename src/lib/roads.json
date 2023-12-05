@@ -1,28 +1,30 @@
 [
-    {
+  {
     "id": "1",
     "name": "Ruta 1",
+    "mapUrl": "dsa",
+    "time": "8:00",
     "interestPoints": [
-        {
-            "name": "P1",
-            "street": "Calle 1",
-            "order": 1
-        },
-        {
-            "name": "P2",
-            "street": "Calle 2",
-            "order": 2
-        },
-        {
-            "name": "P3",
-            "street": "Calle 3",
-            "order": 3
-        },
-        {
-            "name": "P4",
-            "street": "Calle 4",
-            "order": 4
-        }
+      {
+        "id": "P1",
+        "street": "Calle 1",
+        "order": 1
+      },
+      {
+        "id": "P2",
+        "street": "Calle 2",
+        "order": 2
+      },
+      {
+        "id": "P3",
+        "street": "Calle 3",
+        "order": 3
+      },
+      {
+        "id": "P4",
+        "street": "Calle 4",
+        "order": 4
+      }
     ]
-}
+  }
 ]

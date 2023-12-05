@@ -1,0 +1,58 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+  // url      = env("AZURE_SQL") // uses connection pooling
+  // url       = env("NEXT_PUBLIC_POSTGRES_PRISMA_URL") // uses connection pooling
+  // directUrl = env("NEXT_PUBLIC_POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Busses {
+  color     String
+  plate     String   @id
+  seats     Int
+  brand     String
+  model     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  driverID  Int?
+  roadID    Int?
+  Drivers   Drivers? @relation(fields: [driverID], references: [id])
+  Roads     Roads?   @relation(fields: [roadID], references: [id])
+}
+
+model Drivers {
+  id                Int      @id @default(autoincrement())
+  run               String   @unique
+  name              String
+  licenseExpiration DateTime
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  Busses            Busses[]
+}
+
+model Roads {
+  id              Int               @id @default(autoincrement())
+  name            String
+  time            DateTime
+  mapUrl          String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  Busses          Busses[]
+  InterestsPoints InterestsPoints[]
+}
+
+model InterestsPoints {
+  id        Int      @id @default(autoincrement())
+  street    String
+  order     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roadID    Int
+  Roads     Roads    @relation(fields: [roadID], references: [id])
+}

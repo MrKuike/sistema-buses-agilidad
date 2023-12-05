@@ -18,9 +18,15 @@ export default function Page() {
             key={road.id}
             className="grid rounded bg-white p-2 grid-rows-1 grid-cols-3"
           >
-            <span className="text-left text-2xl self-center font-medium">
-              {road.name}
-            </span>
+            <div className="flex flex-col">
+              <span className="text-left text-2xl font-medium">
+                {road.name}
+              </span>
+              <span className="text-left text-sm font-normal">
+                {`Horario de partida ${road.time}`}
+              </span>
+            </div>
+
             <div className="grid grid-rows-2 grid-cols-2 justify-end text-sm text-left">
               <span>Inicio:</span>
               <span>{road.interestPoints[0].street}</span>

@@ -1,0 +1,28 @@
+.layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.2fr 0.6fr 0.2fr;
+    grid-template-areas: "form" "map" "buttons";
+    grid-gap: 1rem;
+    height: 100%;
+}
+
+@media screen and (min-width: 768px) {
+    .layout {
+        grid-template-columns: 0.4fr 0.7fr;
+        grid-template-rows: 0.8fr 0.2fr;
+        grid-template-areas: "form map" "buttons map";
+    }
+}
+
+.form {
+    grid-area: form;
+}
+
+.map {
+    grid-area: map;
+}
+
+.buttons {
+    grid-area: buttons;
+}

@@ -1,10 +1,13 @@
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 export interface Busses {
-  id: UUID;
-  name: string;
+  brand: string;
   color: string;
-  image: string;
+  model: string;
+  plate: string;
+  seats: number;
+  driverID: string | null;
+  roadID: string | null;
 }
 
 export interface Driver {
@@ -15,6 +18,7 @@ export interface Driver {
 export interface Road {
   id: UUID;
   name: string;
+  time: string;
   interestPoints: {
     name: string;
     street: string;

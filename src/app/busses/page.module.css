@@ -1,18 +1,22 @@
-.assign {
-  display: grid;
-  grid-template-areas: 'steps content' 'steps buttons';
-  grid-template-columns: 15% 85%;
-  grid-template-rows: 75% min(25%, 100px);
-}
 
-.steps {
-  grid-area: steps;
-}
 
-.content {
-  grid-area: content;
-}
+@media screen and (min-width: 768px) {
+  .assign {
+    display: grid;
+    grid-template-areas: 'steps content' 'steps buttons';
+    grid-template-columns: 0.1fr 0.9fr;
+    grid-template-rows: 0.9fr 0.1fr;
+  }
 
-.buttons {
-  grid-area: buttons;
+  .steps {
+    grid-area: steps;
+  }
+
+  .content {
+    grid-area: content;
+  }
+
+  .buttons {
+    grid-area: buttons;
+  }
 }

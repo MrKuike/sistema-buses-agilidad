@@ -1,29 +1,37 @@
 import { Busses } from '@/types';
 import Image from 'next/image';
-import Link from 'next/link';
 
 interface BusItemProps {
-  bus: Busses;
+	bus: Busses;
 }
 export default function BusItem({ bus }: BusItemProps) {
-  const { id, name, image } = bus;
+	const { brand, color } = bus;
 
-  return (
-    <div
-      className="flex flex-col items-center border hover:border-blue-500 rounded duration-100 p-2"
-    >
-      <picture className="flex-1 grid place-items-center">
-        <Image
-          className='h-full object-cover'
-          src={`/images/${image}`}
-          width={100}
-          height={100}
-          alt="busesito"
-        />
-      </picture>
-      <div className="flex items-center gap-4">
-        <h2 className="text-lg font-semibold">{name}</h2>
-      </div>
-    </div>
-  );
+	return (
+		<div className='grid grid-rows-2 grid-cols-2 items-center h-36 w-full border hover:border-slate-600 rounded duration-100 p-2'>
+			<picture className='h-full flex justify-center'>
+				<Image
+					className='h-full object-scale-down self-end'
+					src={`/images/${color}.webp`}
+					width={50}
+					height={50}
+					alt='busesito'
+				/>
+			</picture>
+			<div className='border h-full grid items-center'>
+				<h2 className='text-lg text-center font-semibold'>{bus.plate}</h2>
+			</div>
+			<div className='items-center col-span-2 gap-4 text-slate-400'>
+				<h2 className='text-lg text-center font-semibold text-slate-700'>
+					{brand}
+				</h2>
+				<span className='text-sm text-center block'>
+					{bus.driverID ? `Conductor ${bus.driverID}` : 'Sin conductor'}
+				</span>
+				<span className='text-sm text-center block'>
+					{bus.roadID ? `Ruta ${bus.roadID}` : 'Sin ruta'}
+				</span>
+			</div>
+		</div>
+	);
 }
