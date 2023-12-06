@@ -1,13 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import style from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { Marker } from './CreateMap';
+import dynamic from 'next/dynamic';
 
 export default function Page() {
 	const router = useRouter();
 	const [points, setSelectedPoints] = useState<string[]>();
+	const [markers, setMarkers] = useState<Marker[]>([]);
+	const Map = useMemo(
+		() => dynamic(() => import('./CreateMap'), { ssr: false }),
+		[],
+	);
 
 	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -69,7 +76,7 @@ export default function Page() {
 				onSubmit={addPoint}
 			/>
 
-			<div className={`${style.layout} gap-5`}>
+			<div className={`${style.layout} gap-5 flex-1`}>
 				<div className={style.form}>
 					<fieldset className='flex flex-col'>
 						<label htmlFor='name'>Nombre de la ruta</label>
@@ -139,11 +146,14 @@ export default function Page() {
 						/>
 					</fieldset>
 				</div>
+				<div className={`${style.map} w-full h-full flex-1 rounded`}>
+					<Map />
+				</div>
 
-				<iframe
+				{/* <iframe
 					className={`${style.map} w-full h-full flex-1 rounded`}
 					src='https://maps.openrouteservice.org/#/place/@-70.3004837036133,-18.47118343551702,14'
-				></iframe>
+				></iframe> */}
 
 				<div className={`${style.buttons} flex mt-auto gap-2`}>
 					<button

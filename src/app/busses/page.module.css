@@ -4,8 +4,8 @@
   .assign {
     display: grid;
     grid-template-areas: 'steps content' 'steps buttons';
-    grid-template-columns: 0.1fr 0.9fr;
-    grid-template-rows: 0.9fr 0.1fr;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 1fr 0.1fr;
   }
 
   .steps {
