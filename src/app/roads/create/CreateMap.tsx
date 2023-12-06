@@ -40,9 +40,18 @@ function GetCoordinates({
 	return null;
 }
 
-export default function CreateMap() {
+interface CreateMapProps {
+	ORSResponse: DirectionsResponseJSON | undefined;
+	setORSResponse: React.Dispatch<
+		React.SetStateAction<DirectionsResponseJSON | undefined>
+	>;
+}
+
+export default function CreateMap({
+	ORSResponse,
+	setORSResponse,
+}: CreateMapProps) {
 	const [isMounted, setIsMounted] = useState(false);
-	const [response, setResponse] = useState<DirectionsResponseJSON>();
 	const [markers, setMarkers] = useState<Marker[]>([]);
 	const [currentCoordinates, setCurrentCoordinates] = useState<
 		LatLng | undefined
@@ -74,10 +83,10 @@ export default function CreateMap() {
 			})
 				.then(res => res.json())
 				.then(data => {
-					setResponse(data);
+					setORSResponse(data);
 				});
 		} else {
-			setResponse(undefined);
+			setORSResponse(undefined);
 		}
 	}, [markers]);
 
@@ -120,9 +129,12 @@ export default function CreateMap() {
 					currentCoordinates={currentCoordinates}
 					setCurrentCoordinates={setCurrentCoordinates}
 				/>
-				{response && (
+				{ORSResponse && (
 					<Polyline
-						positions={decodePolyline(response.routes[0].geometry ?? '', false)}
+						positions={decodePolyline(
+							ORSResponse.routes[0].geometry ?? '',
+							false,
+						)}
 					/>
 				)}
 			</MapContainer>
