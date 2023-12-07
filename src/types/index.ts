@@ -1,3 +1,6 @@
+import { MapPointsCoord, Roads } from "@prisma/client";
+import { LatLng } from "leaflet";
+
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 export interface Busses {
@@ -16,13 +19,19 @@ export interface Driver {
 }
 
 export interface Road {
-  id: UUID;
   name: string;
-  mapUrl: string;
-  time: string;
-  interestPoints: {
-    id: string;
-    street: string;
-    order: number;
-  }[];
+  mapGeometry: string;
+  time: Date;
 }
+
+export interface InterestsPoints {
+  street: string;
+  order: number;
+}
+
+export type MarkerType = {
+	geocode: LatLng;
+	popUp: string;
+};
+
+export type RoadsResponse = Roads & { InterestsPoints: InterestsPoints[]} & { MapPointsCoord: MapPointsCoord[]};

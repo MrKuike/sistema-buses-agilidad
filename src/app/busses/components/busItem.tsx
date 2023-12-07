@@ -12,13 +12,22 @@ export default function BusItem({ bus, select, selected }: BusItemProps) {
 	const handleClick = () => {
 		select({
 			target: {
-				value: bus.plate,
+				value: JSON.stringify({
+					plate: bus.plate,
+					driverId: bus.driverID,
+					roadId: bus.roadID,
+				}),
 			},
 		} as React.ChangeEvent<HTMLSelectElement>);
-	}
+	};
 
 	return (
-		<div onClick={handleClick} className={`grid grid-rows-2 grid-cols-2 items-center h-36 w-full border rounded duration-100 p-2 ${selected ? 'border-blue-600': 'hover:border-slate-600 '}`}>
+		<div
+			onClick={handleClick}
+			className={`grid grid-rows-2 grid-cols-2 items-center h-36 w-full border rounded duration-100 p-2 ${
+				selected ? 'border-blue-600' : 'hover:border-slate-600 '
+			}`}
+		>
 			<picture className='h-full flex justify-center'>
 				<Image
 					className='h-full object-scale-down self-end'

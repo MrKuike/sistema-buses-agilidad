@@ -24,8 +24,6 @@ export default function Page() {
 			seats: Number(formData.get('seats')),
 		};
 
-		console.log(data);
-
 		if (Object.values(data).some(value => !value)) {
 			alert('Todos los campos son requeridos');
 			return;

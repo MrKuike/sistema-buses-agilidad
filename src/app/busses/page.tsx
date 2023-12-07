@@ -6,13 +6,16 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 interface Selection {
-	busPlate?: string;
-	routeId?: string;
+	busPlate: string | null;
+	routeId: number | null;
 }
 
 export default function BussesPage() {
 	const [currentStep, setCurrentStep] = useState(0);
-	const [selection, setSelection] = useState<Selection>({});
+	const [selection, setSelection] = useState<Selection>({
+		busPlate: null,
+		routeId: null,
+	});
 
 	const steps = [
 		{
@@ -59,7 +62,9 @@ export default function BussesPage() {
 	};
 
 	const handleAssign = async () => {
-		const $assignBtn = document.querySelector('button#assignBtn') as HTMLButtonElement;
+		const $assignBtn = document.querySelector(
+			'button#assignBtn',
+		) as HTMLButtonElement;
 		if (selection.busPlate && selection.routeId) {
 			$assignBtn.disabled = true;
 			const res = await fetch('/api/busses/assign', {
@@ -105,7 +110,7 @@ export default function BussesPage() {
 			<div className={`${styles.buttons} border flex justify-end gap-3 p-4`}>
 				{currentStep > 0 && (
 					<button
-					key={'prevBtn'}
+						key={'prevBtn'}
 						onClick={prevStep}
 						className='bg-slate-400 hover:bg-slate-500 text-white font-bold py-2 px-4 rounded'
 					>
@@ -114,7 +119,7 @@ export default function BussesPage() {
 				)}
 				{currentStep < steps.length - 1 ? (
 					<button
-					key={'nextBtn'}
+						key={'nextBtn'}
 						onClick={nextStep}
 						className='bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded'
 					>
@@ -122,7 +127,7 @@ export default function BussesPage() {
 					</button>
 				) : (
 					<button
-					key={'assignBtn'}
+						key={'assignBtn'}
 						onClick={handleAssign}
 						id='assignBtn'
 						className='enabled:bg-blue-500 disabled:bg-blue-200  hover:enabled:bg-blue-700 text-white font-bold py-2 px-4 rounded'

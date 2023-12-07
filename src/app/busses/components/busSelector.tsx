@@ -25,7 +25,7 @@ function BuildTable({ data, handleSelect, selectedPlate }: BuildTableProps) {
 		<div className='grid auto-rows-max grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-2 p-2 h-full overflow-y-auto'>
 			{data.map(bus => (
 				<BusItem
-				select={handleSelect}
+					select={handleSelect}
 					selected={selectedPlate === bus.plate}
 					key={bus.plate}
 					bus={bus}
@@ -38,17 +38,20 @@ function BuildTable({ data, handleSelect, selectedPlate }: BuildTableProps) {
 interface BusSelectorProps {
 	setSelection: React.Dispatch<
 		React.SetStateAction<{
-			busPlate?: string | undefined;
-			routeId?: string | undefined;
+			busPlate: string | null;
+			routeId: number | null;
 		}>
 	>;
 	selected: {
-		busPlate?: string | undefined;
-		routeId?: string | undefined;
+		busPlate: string | null;
+		routeId: number | null;
 	};
 }
 
-export default function BusSelector({setSelection, selected}: BusSelectorProps) {
+export default function BusSelector({
+	setSelection,
+	selected,
+}: BusSelectorProps) {
 	const router = useRouter();
 	const [data, setData] = useState<Busses[] | null>(null);
 
@@ -64,17 +67,18 @@ export default function BusSelector({setSelection, selected}: BusSelectorProps) 
 		fetchBusses().then(data => setData(data));
 	}, []);
 
-	const fetchBusses = async () => {
-		const res = await fetch('/api/busses', {
-			method: 'GET',
-		});
-		const data = await res.json();
-		return data;
-	};
+	// const fetchBusses = async () => {
+	// 	const res = await fetch('/api/busses', {
+	// 		method: 'GET',
+	// 	});
+	// 	const data = await res.json();
+	// 	return data;
+	// };
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		setSelection((prev) => ({ ...prev, busPlate: event.target.value }));
-	}
+		const bus = JSON.parse(event.target.value);
+		setSelection({ busPlate: bus.plate, routeId: bus.roadId });
+	};
 
 	return (
 		<div className='h-full'>
@@ -87,7 +91,11 @@ export default function BusSelector({setSelection, selected}: BusSelectorProps) 
 					Agregar
 				</button>
 			</div>
-			<BuildTable selectedPlate={selected.busPlate ?? ''} handleSelect={handleSelect} data={data} />
+			<BuildTable
+				selectedPlate={selected.busPlate ?? ''}
+				handleSelect={handleSelect}
+				data={data}
+			/>
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
 import prisma from '@/db';
-import { InterestsPoints, Roads as RoadsType } from '@prisma/client';
+import { InterestsPoints, MapPointsCoord, Roads as RoadsType } from '@prisma/client';
 
 export default class Roads {
 	static async getRoadsById({ id }: { id: number }) {
@@ -8,8 +8,14 @@ export default class Roads {
 				where: {
 					id,
 				},
+				include: {
+					InterestsPoints: {
+						orderBy: { order: 'asc' },
+					},
+					MapPointsCoord: true,
+				},
 			});
-			if (result) {
+			if (result) {				
 				return { status: 200, result };
 			}
 			return { status: 404, message: 'Road not found' };
@@ -20,7 +26,7 @@ export default class Roads {
 
 	static async getAllRoads() {
 		try {
-			const result = await prisma.roads.findMany();
+			const result = await prisma.roads.findMany({include: {InterestsPoints: {orderBy: {order: 'asc'}}, MapPointsCoord: true}});
 			if (result) {
 				return { status: 200, result };
 			}
@@ -32,20 +38,34 @@ export default class Roads {
 
 	static async createRoad(
 		data: RoadsType,
-		interestsPoints?: InterestsPoints[],
+		interestsPoints: InterestsPoints[],
+		coordsPoints: MapPointsCoord[],
 	) {
-		try {
+		try {			
 			const result = await prisma.roads.create({
 				data,
-			});
+			});						
 
 			if (result) {
-				if (interestsPoints) {
+				if (interestsPoints) {					
 					await Promise.all(
 						interestsPoints.map(async interestPoint => {
 							await prisma.interestsPoints.create({
 								data: {
 									...interestPoint,
+									roadID: result.id,
+								},
+							});
+						}),
+					);
+				}
+				
+				if (coordsPoints) {					
+					await Promise.all(
+						coordsPoints.map(async coordPoint => {
+							await prisma.mapPointsCoord.create({
+								data: {
+									...coordPoint,
 									roadID: result.id,
 								},
 							});

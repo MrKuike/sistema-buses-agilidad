@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import dynamic from 'next/dynamic';
 import { DirectionsResponseJSON } from 'openrouteservice/dist/directions';
 import { FaQuestionCircle } from 'react-icons/fa';
+import { InterestsPoints, Road } from '@/types';
 
 const getStreets = (directions: DirectionsResponseJSON) => {
 	const segments = directions.routes[0].segments;
@@ -51,13 +52,61 @@ export default function Page() {
 			return;
 		}
 
-		const road = {
+		if (!ORSResponse) {
+			toast.error('Error con ORS', { toastId: 'error' });
+			return;
+		}
+
+		const time = new Date();
+		time.setHours(+hour.value.split(':')[0]);
+		time.setMinutes(+hour.value.split(':')[1]);
+		time.setSeconds(0);
+
+		const road: Road = {
 			name: name.value,
-			hour: hour.value,
-			points: points,
+			time,
+			mapGeometry: ORSResponse?.routes[0].geometry ?? '',
 		};
 
-		console.log(road, ORSResponse);
+		const interestsPoints: InterestsPoints[] = [];
+
+		getStreets(ORSResponse).map((street, order) => {
+			interestsPoints.push({ street, order });
+		});
+
+		const mapPointsCoords = ORSResponse.metadata.query.coordinates.map(
+			([lng, lat]) => ({ longitude: lng, latitude: lat }),
+		);
+
+		toast.loading('Creando Ruta', {
+			toastId: 'create-road',
+		});
+		fetch('/api/roads', {
+			method: 'POST',
+			body: JSON.stringify({
+				data: road,
+				interestsPoints,
+				coordsPoints: mapPointsCoords,
+			}),
+		}).then(res => {
+			if (res.status == 200) {
+				toast.update('create-road', {
+					render: 'Ruta creada con éxito',
+					type: 'success',
+					autoClose: 2000,
+					isLoading: false,
+				});
+				router.push('/roads');
+				return;
+			}
+
+			toast.update('create-road', {
+				render: 'Error al crear la ruta',
+				type: 'error',
+				autoClose: 2000,
+				isLoading: false,
+			});
+		});
 	};
 
 	useEffect(() => {
@@ -87,45 +136,43 @@ export default function Page() {
 							className='border-2 border-slate-200 rounded px-1 py-2'
 						/>
 					</fieldset>
-					<div>
-						<span>Recorrido de la ruta</span>
-						<ul
-							className={`flex gap-2 w-full flex-col border-2 border-slate-200 rounded px-1 py-2 max-h-20 md:max-h-60 overflow-y-auto`}
-						>
-							{!points && (
-								<li className='flex flex-col justify-center items-center h-full'>
-									<FaQuestionCircle className='text-center text-gray-500' />
-									<span className='text-center text-gray-500'>
-										No existe recorrido
-									</span>
-									<span className='text-center text-xs text-gray-500'>
-										(Seleccione al menos dos puntos en el mapa)
-									</span>
-								</li>
-							)}
-							{points && (
-								<>
-									{points.map((point, index) => (
+					<span>Recorrido de la ruta</span>
+					<ul
+						className={`${style.streets} flex gap-2 w-full flex-col border-2 border-slate-200 rounded px-1 py-2 max-h-20 md:max-h-60 overflow-y-auto`}
+					>
+						{!points && (
+							<li className='flex flex-col justify-center items-center h-full'>
+								<FaQuestionCircle className='text-center text-gray-500' />
+								<span className='text-center text-gray-500'>
+									No existe recorrido
+								</span>
+								<span className='text-center text-xs text-gray-500'>
+									(Seleccione al menos dos puntos en el mapa)
+								</span>
+							</li>
+						)}
+						{points && (
+							<>
+								{points.map((point, index) => {
+									const isStart = index === 0;
+									const isEnd = index === points.length - 1;
+
+									return (
 										<li
 											key={`${point}-${index}`}
 											className='flex flex-col justify-between gap-3 bg-slate-50'
 										>
 											<div className='flex flex-col h-11 justify-center py-1 px-2'>
-												{index === 0 && (
-													<span className='text-xs text-ellipsis'>Inicio</span>
-												)}
-												{index === points.length - 1 &&
-													points.length - 1 > 0 && (
-														<span className='text-xs'>Final</span>
-													)}
+												{isStart && <span className='text-xs'>Inicio</span>}
+												{isEnd && <span className='text-xs'>Final</span>}
 												<span>{point}</span>
 											</div>
 										</li>
-									))}
-								</>
-							)}
-						</ul>
-					</div>
+									);
+								})}
+							</>
+						)}
+					</ul>
 					<fieldset className='flex flex-col'>
 						<label htmlFor='hour'>Horario de partida</label>
 						<input

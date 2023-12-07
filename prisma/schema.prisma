@@ -22,8 +22,8 @@ model Busses {
   updatedAt DateTime @updatedAt
   driverID  Int?
   roadID    Int?
-  Drivers   Drivers? @relation(fields: [driverID], references: [id])
-  Roads     Roads?   @relation(fields: [roadID], references: [id])
+  Drivers   Drivers? @relation(fields: [driverID], references: [id], onDelete: SetNull)
+  Roads     Roads?   @relation(fields: [roadID], references: [id], onDelete: SetNull)
 }
 
 model Drivers {
@@ -38,13 +38,22 @@ model Drivers {
 
 model Roads {
   id              Int               @id @default(autoincrement())
-  name            String
+  name            String            @unique
   time            DateTime
-  mapUrl          String
+  mapGeometry     String
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   Busses          Busses[]
   InterestsPoints InterestsPoints[]
+  MapPointsCoord  MapPointsCoord[]
+}
+
+model MapPointsCoord {
+  id        Int   @id @default(autoincrement())
+  latitude  Float
+  longitude Float
+  roadID    Int
+  Roads     Roads @relation(fields: [roadID], references: [id], onDelete: Cascade)
 }
 
 model InterestsPoints {
@@ -54,5 +63,5 @@ model InterestsPoints {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   roadID    Int
-  Roads     Roads    @relation(fields: [roadID], references: [id])
+  Roads     Roads    @relation(fields: [roadID], references: [id], onDelete: Cascade)
 }

@@ -1,22 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import L, { Icon, LatLng, LatLngExpression, LatLngTuple } from 'leaflet';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import L, { Icon, LatLng } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Polyline } from 'react-leaflet';
 import { decodePolyline } from '@/lib/functions';
 import { DirectionsResponseJSON } from 'openrouteservice/dist/directions';
-
-export type Marker = {
-	geocode: LatLng;
-	popUp: string;
-};
-
-const customIcon = new Icon({
-	iconUrl: '/marker-icon.png',
-	iconSize: [25, 28],
-});
+import { MarkerType } from '@/types';
+import { customIcon } from '@/components/map';
 
 function GetCoordinates({
 	currentCoordinates,
@@ -52,14 +44,14 @@ export default function CreateMap({
 	setORSResponse,
 }: CreateMapProps) {
 	const [isMounted, setIsMounted] = useState(false);
-	const [markers, setMarkers] = useState<Marker[]>([]);
+	const [markers, setMarkers] = useState<MarkerType[]>([]);
 	const [currentCoordinates, setCurrentCoordinates] = useState<
 		LatLng | undefined
 	>(undefined);
 
 	useEffect(() => {
 		if (currentCoordinates) {
-			const currentMarker: Marker = {
+			const currentMarker: MarkerType = {
 				geocode: currentCoordinates,
 				popUp: 'Punto',
 			};
@@ -75,8 +67,6 @@ export default function CreateMap({
 				coords.push([marker.geocode.lng, marker.geocode.lat]);
 			});
 
-			console.log(JSON.stringify({ coords }));
-
 			fetch('/api/coords/directions', {
 				method: 'POST',
 				body: JSON.stringify({ coords }),
@@ -88,7 +78,7 @@ export default function CreateMap({
 		} else {
 			setORSResponse(undefined);
 		}
-	}, [markers]);
+	}, [markers, setORSResponse]);
 
 	useEffect(() => {
 		setIsMounted(true);
@@ -121,9 +111,7 @@ export default function CreateMap({
 						eventHandlers={{
 							click: deleteMarker,
 						}}
-					>
-						<Popup>{marker.popUp}</Popup>
-					</Marker>
+					></Marker>
 				))}
 				<GetCoordinates
 					currentCoordinates={currentCoordinates}
