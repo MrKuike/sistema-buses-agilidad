@@ -90,7 +90,7 @@ export default function CreateMap({
 			marker => marker.geocode.lat !== lat && marker.geocode.lng !== lng,
 		);
 		setMarkers(newMarkers);
-	};
+	};	
 
 	return (
 		isMounted && (
@@ -117,10 +117,10 @@ export default function CreateMap({
 					currentCoordinates={currentCoordinates}
 					setCurrentCoordinates={setCurrentCoordinates}
 				/>
-				{ORSResponse && (
+				{ORSResponse && ORSResponse?.routes && (
 					<Polyline
 						positions={decodePolyline(
-							ORSResponse.routes[0].geometry ?? '',
+							ORSResponse?.routes[0].geometry ?? '',
 							false,
 						)}
 					/>

@@ -62,7 +62,7 @@ export default function Page() {
 				e.preventDefault();
 				create(new FormData(e.target as HTMLFormElement));
 			}}
-			className='flex flex-col gap-5'
+			className='flex flex-col gap-2	'
 		>
 			<fieldset className='flex flex-col'>
 				<label htmlFor='plate'>Patente del bus</label>
@@ -132,13 +132,13 @@ export default function Page() {
 						e.preventDefault();
 						router.back();
 					}}
-					className='flex-1 bg-slate-400 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded mt-5 transition-colors'
+					className='flex-1 bg-slate-400 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded transition-colors'
 				>
 					Cancelar
 				</button>
 				<button
 					type='submit'
-					className='flex-1 bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded mt-5 transition-colors'
+					className='flex-1 bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded transition-colors'
 				>
 					Guardar
 				</button>

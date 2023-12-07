@@ -7,9 +7,13 @@ import { toast } from 'react-toastify';
 import dynamic from 'next/dynamic';
 import { DirectionsResponseJSON } from 'openrouteservice/dist/directions';
 import { FaQuestionCircle } from 'react-icons/fa';
+import { MdError } from "react-icons/md";
 import { InterestsPoints, Road } from '@/types';
 
 const getStreets = (directions: DirectionsResponseJSON) => {
+	if (!directions.routes) {
+		return []
+	}
 	const segments = directions.routes[0].segments;
 	const points: string[] = [];
 	segments.forEach(segment => {
@@ -138,7 +142,7 @@ export default function Page() {
 					</fieldset>
 					<span>Recorrido de la ruta</span>
 					<ul
-						className={`${style.streets} flex gap-2 w-full flex-col border-2 border-slate-200 rounded px-1 py-2 max-h-20 md:max-h-60 overflow-y-auto`}
+						className={`${style.streets} flex gap-2 w-full flex-col border-2 border-slate-200 rounded px-1 py-2 max-h-20 md:max-h-40 overflow-y-auto`}
 					>
 						{!points && (
 							<li className='flex flex-col justify-center items-center h-full'>
@@ -153,7 +157,15 @@ export default function Page() {
 						)}
 						{points && (
 							<>
-								{points.map((point, index) => {
+								{
+								points.length === 0 ? 
+								<li className='flex flex-col justify-center items-center h-full'>
+									<MdError className='text-center text-gray-500' />
+									<span className='text-center text-gray-500'>
+										No se pudo calcular la ruta
+									</span>
+								</li> :
+								points.map((point, index) => {
 									const isStart = index === 0;
 									const isEnd = index === points.length - 1;
 

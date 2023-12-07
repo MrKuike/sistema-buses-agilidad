@@ -13,10 +13,10 @@ import roadsArray from './roads.json';
 //   return bus as Busses;
 // };
 
-export const getDrivers = () => {
-  return driversArray as Driver[];
-};
+// export const getDrivers = () => {
+//   return driversArray as Driver[];
+// };
 
-export const getRoads = () => {
-   return roadsArray as Road[];
-};
+// export const getRoads = () => {
+//    return roadsArray as Road[];
+// };
