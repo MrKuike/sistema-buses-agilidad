@@ -2,52 +2,36 @@
 import RoadSelector from './components/roadSelector';
 import BusSelector from './components/busSelector';
 import styles from './page.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useBusSelection } from '../store/busSelection';
 
-interface Selection {
-	busPlate: string | null;
-	routeId: number | null;
-}
+const steps = [
+	{
+		name: 'Seleccionar autobus',
+		component: <BusSelector />,
+	},
+	{
+		name: 'Seleccionar ruta',
+		component: <RoadSelector />,
+	},
+];
 
 export default function BussesPage() {
 	const [currentStep, setCurrentStep] = useState(0);
-	const [selection, setSelection] = useState<Selection>({
-		busPlate: null,
-		routeId: null,
-	});
+	const { busPlate, routeId } = useBusSelection();
+	const $assignBtn = useRef<HTMLButtonElement>(null)
 
-	const steps = [
-		{
-			name: 'Seleccionar autobus',
-			component: (
-				<BusSelector
-					selected={selection}
-					setSelection={setSelection}
-				/>
-			),
-		},
-		{
-			name: 'Seleccionar ruta',
-			component: (
-				<RoadSelector
-					selected={selection}
-					setSelection={setSelection}
-				/>
-			),
-		},
-	];
 
-	const handleStepChange = (event: React.MouseEvent<HTMLButtonElement>) => {
-		const step = +(event.target as HTMLButtonElement).value;
+	const handleStepChange = (step: number) => {
 		setCurrentStep(step);
 	};
 
 	const currentStepComponent = steps[currentStep].component;
 
 	useEffect(() => {
-		console.log(selection);
-	}, [selection]);
+		console.log({ busPlate, routeId });
+	}, [busPlate, routeId]);
 
 	const prevStep = () => {
 		if (currentStep > 0) {
@@ -56,20 +40,29 @@ export default function BussesPage() {
 	};
 
 	const nextStep = () => {
+		if(!busPlate){
+			toast.error('Por favor, seleccione un autobus');
+			return;
+		}
+
 		if (currentStep < steps.length - 1) {
 			setCurrentStep(prev => prev + 1);
 		}
 	};
 
 	const handleAssign = async () => {
-		const $assignBtn = document.querySelector(
-			'button#assignBtn',
-		) as HTMLButtonElement;
-		if (selection.busPlate && selection.routeId) {
-			$assignBtn.disabled = true;
+		if (busPlate && routeId) {
+			if($assignBtn.current){
+				$assignBtn.current.disabled = true;
+			}
 			const res = await fetch('/api/busses/assign', {
 				method: 'POST',
-				body: JSON.stringify({ data: selection }),
+				body: JSON.stringify({
+					data: {
+						busPlate,
+						routeId,
+					},
+				}),
 			});
 
 			if (res.ok) {
@@ -97,8 +90,7 @@ export default function BussesPage() {
 										? 'bg-slate-400'
 										: 'bg-slate-100 hover:bg-slate-200'
 								}`}
-								onClick={handleStepChange}
-								value={i}
+								onClick={() => handleStepChange(i)}
 							>
 								{step.name}
 							</button>
@@ -121,7 +113,8 @@ export default function BussesPage() {
 					<button
 						key={'nextBtn'}
 						onClick={nextStep}
-						className='bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded'
+						disabled={!busPlate}
+						className='bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded disabled:bg-slate-400 transition-colors duration-100'
 					>
 						Siguiente
 					</button>
@@ -130,6 +123,7 @@ export default function BussesPage() {
 						key={'assignBtn'}
 						onClick={handleAssign}
 						id='assignBtn'
+						ref={$assignBtn}
 						className='enabled:bg-blue-500 disabled:bg-blue-200  hover:enabled:bg-blue-700 text-white font-bold py-2 px-4 rounded'
 					>
 						Asignar

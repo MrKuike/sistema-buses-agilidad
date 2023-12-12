@@ -1,31 +1,32 @@
+import { useBusSelection } from '@/app/store/busSelection';
 import { Busses } from '@/types';
 import Image from 'next/image';
 
 interface BusItemProps {
-	select: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 	bus: Busses;
-	selected: boolean;
 }
-export default function BusItem({ bus, select, selected }: BusItemProps) {
+export default function BusItem({ bus }: BusItemProps) {
 	const { brand, color } = bus;
+	const { setBusSelection, reset, busPlate } = useBusSelection();
 
 	const handleClick = () => {
-		select({
-			target: {
-				value: JSON.stringify({
-					plate: bus.plate,
-					driverId: bus.driverID,
-					roadId: bus.roadID,
-				}),
-			},
-		} as React.ChangeEvent<HTMLSelectElement>);
+		if(busPlate === bus.plate){
+			return reset();
+		}
+
+		setBusSelection({
+			busPlate: bus.plate,
+			driverId: bus.driverID,
+			routeId: Number(bus.roadID),
+		});
 	};
 
 	return (
-		<div
+		<button
+			type='button'
 			onClick={handleClick}
 			className={`grid grid-rows-2 grid-cols-2 items-center h-36 w-full border rounded duration-100 p-2 ${
-				selected ? 'border-blue-600' : 'hover:border-slate-600 '
+				busPlate === bus.plate ? 'border-blue-600' : 'hover:border-slate-600 '
 			}`}
 		>
 			<picture className='h-full flex justify-center'>
@@ -51,6 +52,6 @@ export default function BusItem({ bus, select, selected }: BusItemProps) {
 					{bus.roadID ? `Ruta ${bus.roadID}` : 'Sin ruta'}
 				</span>
 			</div>
-		</div>
+		</button>
 	);
 }

@@ -8,11 +8,9 @@ import { TailSpin } from 'react-loading-icons';
 
 interface BuildTableProps {
 	data: Busses[] | null;
-	handleSelect: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-	selectedPlate: string;
 }
 
-function BuildTable({ data, handleSelect, selectedPlate }: BuildTableProps) {
+function BuildTable({ data }: BuildTableProps) {
 	if (!data) {
 		return (
 			<div className='h-full grid place-content-center'>
@@ -25,8 +23,6 @@ function BuildTable({ data, handleSelect, selectedPlate }: BuildTableProps) {
 		<div className='grid auto-rows-max grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-2 p-2 h-full overflow-y-auto'>
 			{data.map(bus => (
 				<BusItem
-					select={handleSelect}
-					selected={selectedPlate === bus.plate}
 					key={bus.plate}
 					bus={bus}
 				/>
@@ -35,23 +31,9 @@ function BuildTable({ data, handleSelect, selectedPlate }: BuildTableProps) {
 	);
 }
 
-interface BusSelectorProps {
-	setSelection: React.Dispatch<
-		React.SetStateAction<{
-			busPlate: string | null;
-			routeId: number | null;
-		}>
-	>;
-	selected: {
-		busPlate: string | null;
-		routeId: number | null;
-	};
-}
+interface BusSelectorProps {}
 
-export default function BusSelector({
-	setSelection,
-	selected,
-}: BusSelectorProps) {
+export default function BusSelector({}: BusSelectorProps) {
 	const router = useRouter();
 	const [data, setData] = useState<Busses[] | null>(null);
 
@@ -67,19 +49,6 @@ export default function BusSelector({
 		fetchBusses().then(data => setData(data));
 	}, []);
 
-	// const fetchBusses = async () => {
-	// 	const res = await fetch('/api/busses', {
-	// 		method: 'GET',
-	// 	});
-	// 	const data = await res.json();
-	// 	return data;
-	// };
-
-	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		const bus = JSON.parse(event.target.value);
-		setSelection({ busPlate: bus.plate, routeId: bus.roadId });
-	};
-
 	return (
 		<div className='h-full'>
 			<div className='flex justify-between px-2'>
@@ -91,11 +60,7 @@ export default function BusSelector({
 					Agregar
 				</button>
 			</div>
-			<BuildTable
-				selectedPlate={selected.busPlate ?? ''}
-				handleSelect={handleSelect}
-				data={data}
-			/>
+			<BuildTable data={data} />
 		</div>
 	);
 }

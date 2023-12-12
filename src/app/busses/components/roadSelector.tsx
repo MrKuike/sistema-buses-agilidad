@@ -1,38 +1,25 @@
 'use client';
 
+import { useBusSelection } from '@/app/store/busSelection';
 import { RoadsResponse } from '@/types';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
-interface RoadSelectorProps {
-	setSelection: React.Dispatch<
-		React.SetStateAction<{
-			busPlate: string | null;
-			routeId: number | null;
-		}>
-	>;
-	selected: {
-		busPlate: string | null;
-		routeId: number | null;
-	};
-}
+interface RoadSelectorProps {}
 
 const MapComponent = dynamic(() => import('@/components/map'), {
 	ssr: false,
 });
 
-export default function RoadSelector({
-	setSelection,
-	selected,
-}: RoadSelectorProps) {
+export default function RoadSelector(props: RoadSelectorProps) {
+	const { routeId, setRouteId } = useBusSelection();
 	const [roads, setRoads] = useState<RoadsResponse[]>([]);
 	const [selectedRoad, setSelectedRoad] = useState<RoadsResponse | undefined>();
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const road = roads.find(road => road.id === +event.target.value);
 		if (!road) return;
-		setSelection(prev => ({ ...prev, routeId: road.id }));
+		setRouteId(road.id);
 	};
 
 	useEffect(() => {
@@ -42,8 +29,8 @@ export default function RoadSelector({
 			if (r.status === 200) {
 				r.json().then((data: RoadsResponse[]) => {
 					setRoads(data);
-					if (selected.routeId) {
-						const road = data.find(road => road.id === selected.routeId);
+					if (routeId) {
+						const road = data.find(road => road.id === routeId);
 						if (road) {
 							setSelectedRoad(road);
 						}
@@ -51,7 +38,7 @@ export default function RoadSelector({
 				});
 			}
 		});
-	}, [selected]);
+	}, [routeId]);
 
 	return (
 		<div className='flex flex-col h-full'>
